@@ -1,0 +1,134 @@
+/* ============================================================
+   Minhas pendências — popups
+   ============================================================ */
+
+.pend {
+  /* cores e larguras: troque aqui pelas do seu tema */
+  --pend-papel: #fff;
+  --pend-texto: #1f2937;
+  --pend-suave: #6b7280;
+  --pend-alerta-fundo: #fef3f2;
+  --pend-alerta-borda: #fecdca;
+  --pend-colunas: minmax(0, 1fr) 112px 112px 124px; /* título | retirado | devolver | prazo */
+}
+
+/* trava a rolagem da página enquanto o popup está aberto */
+html.pend-aberto {
+  overflow: hidden;
+  padding-right: var(--pend-barra, 0);
+}
+
+/* o <dialog> vira uma camada que cobre a tela inteira */
+dialog.pend {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  color: var(--pend-texto);
+}
+dialog.pend[open] { display: grid; place-items: center; }
+dialog.pend::backdrop { background: transparent; }
+
+/* tela escurecida e levemente desfocada */
+.pend__fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, .6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+/* ---------- sem pendências ---------- */
+.pend__caixa {
+  position: relative;
+  box-sizing: border-box;
+   width: min(860px, 100% - 32px);
+  padding: 28px 24px 22px;
+  text-align: center;
+  background: var(--pend-papel);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+}
+.pend__icone {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: #ecfdf3;
+  color: #067647;
+  font-size: 24px;
+}
+.pend__caixa h2 { margin: 0 0 4px; font-size: 1.15em; }
+.pend__caixa p  { margin: 0 0 18px; color: var(--pend-suave); }
+
+/* ---------- com pendências: o "novo painel" ---------- */
+.pend__painel {
+  position: relative;
+  box-sizing: border-box;
+  width: min(calc(100vw - 32px), 780px);
+  padding: 22px 22px 18px;
+}
+.pend__painel > :not(.pend__papel) { position: relative; } /* conteúdo fica acima do papel */
+.pend__papel {
+  position: absolute;
+  inset: 0;
+  background: var(--pend-papel);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+}
+.pend__topo h2 { margin: 0; font-size: 1.25em; }
+.pend__topo p  { margin: 4px 0 16px; color: var(--pend-suave); font-size: .92em; }
+
+/* cabeçalho e linhas usam as mesmas colunas, por isso alinham */
+.pend__cab,
+.pend__linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px 100px 170px;
+  align-items: center;
+}
+.pend__cab { padding-bottom: 6px; color: var(--pend-suave); font-size: .85em; font-weight: 600; }
+.pend__linhas { display: grid; gap: 8px; }
+
+.pend__linha {
+  box-sizing: border-box;
+  padding: 12px 0;
+  font-size: var(--pend-fonte, 1em); /* o JS copia o tamanho de letra da sua tabela */
+  background: var(--pend-alerta-fundo);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--pend-alerta-borda), 0 4px 14px rgba(180, 35, 24, .16);
+}
+.pend__cel { min-width: 0; padding: 0 14px; overflow-wrap: anywhere; }
+.pend__cel:not(:first-child) { white-space: nowrap; }
+.pend__linha--oculta { visibility: hidden; }
+
+/* cópia da linha enquanto ela viaja da tabela até o painel */
+.pend__voo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.pend__rodape { display: flex; justify-content: flex-end; margin-top: 16px; }
+
+/* telas estreitas: some a coluna "Retirado em" para o resto caber */
+@media (max-width: 520px) {
+  .pend { --pend-colunas: minmax(0, 1fr) 84px 92px; }
+  .pend__painel { padding: 18px 12px 14px; }
+  .pend__cel { padding: 0 8px; }
+  .pend__cel:nth-child(2) { display: none; }
+  .pend__linha { font-size: min(var(--pend-fonte, 1em), 13px); }
+}

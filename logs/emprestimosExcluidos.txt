@@ -1,0 +1,10 @@
+Leitor: ramalho, Livro: game of thrones, Retirada: 2026-11-02, Devolução: 2026-11-23, Entregue? Não, 2026-11-02 23:52:41.734677
+Leitor: test6, Livro: Sherlock Holmes, Retirada: 2026-11-01, Devolução: 2026-11-08, Entregue? Não, 2026-11-04 10:43:40.110313
+Leitor: test6, Livro: insurgente, Retirada: 2026-11-01, Devolução: 2026-11-08, Entregue? Não, 2026-11-04 10:43:40.110329
+Leitor: teste6, Livro: Sherlock Holmes, Retirada: 2026-10-23, Devolução: 2026-10-30, Entregue? Não, 2026-11-04 10:43:42.966909
+Leitor: teste5, Livro: Sherlock Holmes, Retirada: 2026-11-01, Devolução: 2026-11-08, Entregue? Não, 2026-11-04 10:43:44.596197
+Leitor: teste5, Livro: Sherlock Holmes, Retirada: 2026-11-01, Devolução: 2026-11-08, Entregue? Não, 2026-11-04 10:43:44.596240
+Leitor: teste5, Livro: insurgente, Retirada: 2026-11-01, Devolução: 2026-11-08, Entregue? Não, 2026-11-04 10:43:44.596250
+Leitor: teste123, Livro: Sherlock Holmes, Retirada: 2026-10-23, Devolução: 2026-11-06, Entregue? Não, 2026-11-04 10:43:46.095357
+Leitor: teste123, Livro: insurgente, Retirada: 2026-10-23, Devolução: 2026-11-06, Entregue? Não, 2026-11-04 10:43:46.095373
+Leitor: teste123, Livro: divergente , Retirada: 2026-10-23, Devolução: 2026-10-30, Entregue? Não, 2026-11-04 10:43:46.095378

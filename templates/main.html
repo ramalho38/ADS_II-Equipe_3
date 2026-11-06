@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block main %}
+{% with mensagens = get_flashed_messages() %}
+        {% if mensagens %}
+            <div class="popup" role="status">
+                <span class="popup-icone">✔</span>
+                <span class="popup-texto">{{ mensagens[0] }}</span>
+            </div>
+        {% endif %}
+    {% endwith %}
+<main class="container">
+ 
+        <!-- ===== BOAS-VINDAS + BUSCA ===== -->
+        <div class="boas-vindas">
+            <h1>Olá, {{ session["UserNAME"] }}</h1>
+            <p>O que você quer ler hoje?</p>
+        </div>
+ 
+        <!-- ===== RESUMO DA CONTA ===== -->
+        <section class="resumo">
+            <h2 class="section-title">Sua conta</h2>
+            <p class="section-sub">Acompanhe o que você tem em andamento.</p>
+ 
+            <section class="emp" aria-labelledby="emp-titulo">
+ 
+    <div class="emp-topo">
+        <h2 id="emp-titulo">Empréstimos</h2>
+        <!-- quantidade em uso / limite -->
+        <span class="emp-contagem">{{ emprestimos | length }} de 3 em uso</span>
+    </div>
+ 
+    <p class="emp-dica" id="emp-dica" hidden>Escolha o livro que você quer devolver.</p>
+
+    <div class="emp-rolagem">
+        <table class="emp-tabela">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Retirado em</th>
+                    <th>Devolver até</th>
+                    <th>Prazo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in range(3) %}
+                    {% if emprestimos[x] %}
+                        {% set prazo = calculoPrazo(emprestimos[x][0]) %}
+                        {% if prazo > 2 %}
+                            {% set aviso = 'ok' %}
+                            {% set prazo = 'Faltam %s dia(s)' | format(prazo ) %}
+                        {% elif prazo > 0 %}
+                            {% set aviso = 'alerta' %}
+                            {% set prazo = 'Faltam %s dia(s)' | format(prazo ) %}
+                        {% elif prazo==0 %}
+                            {% set aviso = 'alerta' %}
+                            {% set prazo = 'Vence hoje' %}
+                        {% else %}
+                            {% set aviso = 'atraso' %}
+                            {% set prazo = 'Venceu há %s dia(s)' | format(prazo | abs) %}
+                        {% endif %}
+                        {% set titulo,retirada,entrega,emp,idEmprestimo = emprestimos[x][2], formatDate(emprestimos[x][1]), formatDate(emprestimos[x][0]), 'livro', emprestimos[x][3]  %}
+                        {% else %}
+                            {% set titulo,retirada,entrega,prazo,emp,idEmprestimo = '—','—','—','—','vaga','' %}
+                        {% endif %}
+                <tr{% if emp == 'livro' %} class="emp-linha" data-titulo="{{ titulo }}" data-atraso="{{ 1 if aviso == 'atraso' else 0 }}" data-multa="{{ multa | default('R$ 0,00') }}"{% endif %}>
+                    <td class="emp-{{ emp }}">{{ titulo }}</td>
+                    <input type='hidden' id="emprestimoID"  value="{{ idEmprestimo }}">
+                    <td>{{ retirada }}</td>
+                    <td>{{ entrega }}</td>
+                    <td><span class="prazo prazo-{{ aviso }}">{{prazo}}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+ 
+</section>
+
+            <p class="regra">Lembrete: cada leitor pode ter três (3) livros emprestados por vez.</p>
+        </section>
+ 
+        <!-- ===== ACESSO ÀS FUNCIONALIDADES ===== -->
+        <section>
+            <h2 class="section-title">O que você quer fazer?</h2>
+            <p class="section-sub">Acesse as funcionalidades da biblioteca.</p>
+ 
+            <div class="grid">
+                <a href="/livro" class="card">
+                    <div class="icon">📚</div>
+                    <h3>Livros</h3>
+                    <p>Consulte o acervo e realize empréstimos.</p>
+                    <span class="link">Ver livros →</span>
+                </a>
+ 
+                <a href="#" class="card" id="btn-devolucao" role="button" aria-pressed="false">
+                    <div class="icon">↩️</div>
+                    <h3>Devolver um livro</h3>
+                    <p>Registre a devolução do livro que está com você.</p>
+                    <span class="link">Registrar devolução →</span>
+                </a>
+ 
+                <a href="#" class="card" id="btn-pendencias" role="button" aria-haspopup="dialog">
+                    <div class="icon">⚠️</div>
+                    <h3>Minhas pendências</h3>
+                    <p>Veja empréstimos em atraso e multas, quando houver.</p>
+                    <span class="link">Ver pendências →</span>
+                </a>
+            </div>
+        </section>
+ 
+ 
+    </main>
+{% include "_pendencias.html" %}
+{% include "_devolucao.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/devolucao.css') }}">
+<script src="{{ url_for('static', filename='js/devolucao.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pendencias.css') }}">
+<script src="{{ url_for('static', filename='js/pendencias.js') }}" defer></script>
+{% endblock %}

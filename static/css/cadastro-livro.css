@@ -1,0 +1,155 @@
+/* ==========================================================
+   cadastro-livro.css - formulário de cadastro de livro
+   Depende do painel-admin.css (variáveis, cabeçalho, rodapé).
+   Carregar DEPOIS dele.
+   Salvar em: static/css/cadastro-livro.css
+   ========================================================== */
+
+.topo { padding-bottom: 20px; }
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: .95rem;
+}
+
+.voltar:hover { color: var(--brand); text-decoration: underline; }
+
+/* ---------- Cartão do formulário ---------- */
+.form-livro {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 36px;
+    margin-bottom: 48px;
+    padding: 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(42, 33, 24, .06);
+}
+
+/* ---------- Campos ---------- */
+.campo { margin-bottom: 18px; }
+
+.form-livro label {
+    display: block;
+    font-weight: 600;
+    font-size: .93rem;
+    margin-bottom: 6px;
+}
+
+.form-livro input[type="text"],
+.form-livro input[type="number"],
+.form-livro select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.form-livro input:focus,
+.form-livro select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(31, 95, 91, .15);
+}
+
+.linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.dica { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+
+/* ---------- Imagem ---------- */
+.previa {
+    aspect-ratio: 2 / 3; 
+    overflow: hidden; 
+    margin-bottom: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 3.4rem;
+    color: #fff;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+}
+.previa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.form-livro input[type="file"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--muted);
+}
+
+.form-livro input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 9px 16px;
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--brand);
+    background: transparent;
+    border: 2px solid var(--brand);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+
+.form-livro input[type="file"]::file-selector-button:hover {
+    background: var(--brand);
+    color: #fff;
+}
+.previa img[hidden] { display: none; }
+/* ---------- Botões ---------- */
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 26px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: center;
+    border: 2px solid var(--brand);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.btn-primary { color: #fff; background: var(--brand); }
+.btn-primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+
+.btn-outline { color: var(--brand); background: transparent; }
+.btn-outline:hover { background: var(--brand); color: #fff; }
+
+/* ---------- Celular ---------- */
+@media (max-width: 760px) {
+    .form-livro {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 24px 20px;
+    }
+
+    .previa { max-width: 220px; margin-inline: auto; }
+    .linha { grid-template-columns: 1fr; gap: 0; }
+    .acoes { flex-direction: column-reverse; }
+    .btn { width: 100%; }
+}

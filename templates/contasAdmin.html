@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Contas</title>
+    <style>
+        :root {
+            --teal: #1f5c58;
+            --teal-escuro: #174744;
+            --laranja: #d4883a;
+            --creme: #faf5ee;
+            --borda: #eadfcf;
+            --areia: #f2e3cb;
+            --texto: #4f463d;
+            --suave: #7a6f63;
+            --perigo: #a8432f;
+            --serif: Georgia, "Times New Roman", serif;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--creme);
+            color: var(--texto);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        h1, h2, h3 { font-family: var(--serif); color: var(--teal); margin: 0; }
+
+        /* topo */
+        .topo { background: #fff; border-bottom: 1px solid var(--borda); }
+        .topo-int {
+            max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { font-family: var(--serif); font-weight: 700; font-size: 1.6rem; color: var(--teal); }
+        .logo span { color: var(--laranja); }
+        .selo { background: var(--areia); color: #8a5a1c; font-size: .8rem; padding: 5px 12px; border-radius: 999px; }
+
+        /* página */
+        .pagina { max-width: 1100px; margin: 0 auto; padding: 40px 24px 64px; }
+        .pagina > h1 { font-size: 2.2rem; margin-bottom: 6px; }
+        .sub { margin: 0 0 28px; color: var(--suave); }
+
+        /* tabela */
+        .cartao {
+            background: #fff; border: 1px solid var(--borda); border-radius: 16px;
+            padding: 8px 22px 14px; overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+        table tr:first-child td {
+            font-size: .75rem; letter-spacing: .04em; text-transform: uppercase;
+            color: var(--suave); font-weight: 600; padding-top: 18px;
+        }
+        table tr:last-child td { border-bottom: none; }
+        table tr:not(:first-child):hover td { background: #fdfaf5; }
+        td form { margin: 0; }
+
+        /* botões */
+        button { font: inherit; cursor: pointer; }
+        .icone {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            border: 1px solid var(--borda); background: #fff; color: var(--perigo);
+            font-weight: 700; padding: 0; transition: background .15s, color .15s, border-color .15s;
+        }
+        .icone:hover { background: var(--perigo); border-color: var(--perigo); color: #fff; }
+        .botaoEdicao { color: var(--teal); background: var(--areia); border-color: var(--areia); }
+        .botaoEdicao:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+        .aviso {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            font-size: .9rem; font-weight: 400; color: #6b4a1f;
+            background: var(--areia); border-radius: 10px;
+            padding: 12px 16px; margin: 0 0 24px;
+        }
+
+        .btn {
+            border-radius: 999px; padding: 10px 22px; font-weight: 600; font-size: .95rem;
+            border: 2px solid var(--teal); transition: background .15s, color .15s;
+        }
+        .btn-primario { background: var(--teal); color: #fff; }
+        .btn-primario:hover { background: var(--teal-escuro); border-color: var(--teal-escuro); }
+        .btn-secundario { background: transparent; color: var(--teal); }
+        .btn-secundario:hover { background: var(--areia); }
+        .btn-perigo { background: var(--perigo); border-color: var(--perigo); color: #fff; }
+        .btn-perigo:hover { background: #8c3524; border-color: #8c3524; }
+
+        :focus-visible { outline: 3px solid var(--laranja); outline-offset: 2px; }
+
+        /* pop-ups (o JS alterna display none/block) */
+        #formularioEdicao, #confirmacaoExclusao {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #fff; border-radius: 18px; padding: 28px;
+            box-shadow: 0 0 0 100vmax rgba(23, 40, 38, .55), 0 24px 60px rgba(0, 0, 0, .25);
+            animation: entrar .22s ease-out;
+        }
+        #formularioEdicao { width: min(440px, calc(100vw - 32px)); z-index: 50; }
+        #confirmacaoExclusao { width: min(340px, calc(100vw - 32px)); z-index: 60; text-align: center; }
+        #confirmacaoExclusao h3 { font-size: 1.4rem; margin-bottom: 18px; }
+        #confirmacaoExclusao .btn { margin: 0 4px; }
+        #formularioEdicao h3 { font-size: 1.4rem; margin-bottom: 18px; }
+        #formularioEdicao label {
+            display: block; margin-bottom: 14px; font-size: .85rem; font-weight: 600; color: var(--suave);
+        }
+        #formularioEdicao input {
+            display: block; width: 100%; margin-top: 5px; padding: 10px 12px;
+            font: inherit; font-weight: 400; color: var(--texto);
+            border: 1.5px solid var(--borda); border-radius: 10px; background: #fff;
+        }
+        #formularioEdicao input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(31, 92, 88, .15); }
+        #formularioEdicao input[readonly] { background: var(--creme); color: var(--suave); }
+        .acoes { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+
+        @keyframes entrar {
+            from { opacity: 0; transform: translate(-50%, -46%); }
+            to   { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #formularioEdicao, #confirmacaoExclusao { animation: none; }
+        }
+        @media (max-width: 640px) {
+            .pagina { padding-top: 28px; }
+            .pagina > h1 { font-size: 1.8rem; }
+            .cartao { padding: 4px 12px 10px; }
+        }
+        .popup {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--brand);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(42, 33, 24, .2);
+    animation: popup 4.5s ease forwards;
+}
+
+.popup-icone {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.popup-texto { font-weight: 600; }
+
+@keyframes popup {
+    0%   { opacity: 0; transform: translateX(40px); }
+    8%   { opacity: 1; transform: translateX(0); }
+    85%  { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(40px); visibility: hidden; }
+}
+
+@media (max-width: 760px) {
+    .popup { left: 16px; right: 16px; }
+}
+    </style>
+</head>
+<body>
+    <header class="topo">
+        <div class="topo-int">
+            <span class="logo">Book<span>Flow</span></span>
+            <span class="selo">Administração</span>
+        </div>
+    </header>
+    {% with mensagens = get_flashed_messages() %}
+        {% if mensagens %}
+            <div class="popup" role="status">
+                <span class="popup-icone">✔</span>
+                <span class="popup-texto">{{ mensagens[0] }}</span>
+            </div>
+        {% endif %}
+    {% endwith %}
+    <main class="pagina">
+    <h1>Gerenciamento de Contas</h1>
+    <h2 class="aviso">Aviso! A exclusão de uma conta acarretará na remoção dos empréstimos associados à esta. Você pode encontrar esses empréstimos em emprestimosExcluidos.txt</h2>
+    <p class="sub">Consulte, edite ou exclua as contas cadastradas na biblioteca.</p>
+    <div class="cartao">
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>NOME</td>
+            <td>EMAIL</td>
+            <td>SENHA</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% for x in usuarios %}
+        <tr>
+        {% for y in x %}
+        <td>{{ y }}</td>
+        {% endfor %}
+        <td><form action='/exclusaoConta' method="POST" class="exclusao">
+        <input type="hidden" name="idConta" value="{{ x[0] }}">
+        <button type="submit" class="icone" title="Excluir conta" aria-label="Excluir conta">X</button>
+        </form></td>
+        <td>
+            <button id='edicao' class='botaoEdicao icone' type="button" title="Editar conta" aria-label="Editar conta">🖋️</button>
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    </main>
+
+            <form action="/edicaoConta" method="POST"  id="formularioEdicao">
+            <h3>Editar conta</h3>
+            <label>ID <input type="text" name="idConta" readonly></label>
+            <label>Nome <input type="text" name='nomeConta'  ></label>
+            <label>Email <input type="email" name="emailConta" ></label>
+            <label>Senha <input type="text" name='senhaConta' ></label>
+            <div class="acoes">
+            <button type="button" id="cancelarEdicao" class="btn btn-secundario">Cancelar</button>
+            <button type="submit" id="envioEdicao" class="btn btn-primario">Enviar</button>
+            </div>
+        </form>
+
+        <div id="confirmacaoExclusao" style="display:none;">
+            <h3>Certeza?</h3>
+            <button id='confirmacaoPositiva' type="button" class="btn btn-perigo">Sim</button>
+            <button id="confirmacaoNegativa" type="button" class="btn btn-secundario">Não</button>
+        </div>
+    <script>
+        formularioEdicao.style.display = 'none'
+        const botoesEdicoes = document.querySelectorAll('.botaoEdicao')
+        cancelarEdicao.addEventListener('click', () => {
+            formularioEdicao.style.display = 'none'
+        })
+        botoesEdicoes.forEach(x => {
+            x.addEventListener('click', () => popUpEdicao(x))
+        })
+        document.querySelectorAll('.exclusao').forEach(form => {
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    confirmacaoExclusao.style.display = 'block'
+                    confirmacaoNegativa.addEventListener('click', () => {
+                        confirmacaoExclusao.style.display = 'none'
+                    })
+                    confirmacaoPositiva.addEventListener('click', () => {
+                        form.submit()
+                    })
+                    
+                })
+        })
+
+        function popUpEdicao(x) {
+            formularioEdicao.style.display = 'block'
+            const linha = x.parentElement.parentElement
+            console.log(linha.children[0])
+            const form = document.getElementById('formularioEdicao')
+            form.elements['idConta'].value = linha.children[0].textContent
+            form.elements['nomeConta'].value = linha.children[1].textContent
+            form.elements['emailConta'].value = linha.children[2].textContent
+            form.elements['senhaConta'].value = linha.children[3].textContent
+        }
+        //envioEdicao.addEventListener('click', () => {document.getElementById('formularioEdicao').reset(); formularioEdicao.style.display = 'none'})
+    </script>
+</body>
+</html>

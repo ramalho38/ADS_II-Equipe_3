@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | BookFlow</title>
+
+    <style>
+        :root {
+            --bg: #fbf7f0;
+            --surface: #ffffff;
+            --ink: #2a2118;
+            --muted: #6f6254;
+            --brand: #1f5f5b;
+            --brand-dark: #164744;
+            --accent: #d98e3f;
+            --line: #e8dfd2;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, .logo { font-family: Georgia, "Times New Roman", serif; }
+
+        a { color: inherit; text-decoration: none; }
+
+        .container { width: min(1100px, 100% - 32px); margin-inline: auto; }
+
+        /* ---------- Cabeçalho ---------- */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+        }
+
+        .logo { font-size: 1.6rem; font-weight: 700; color: var(--brand); letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-weight: 600;
+            border: 2px solid var(--brand);
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: background .2s, color .2s;
+        }
+
+        .btn-primary { background: var(--brand); color: #fff; }
+        .btn-primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+        .btn-outline { color: var(--brand); background: transparent; }
+        .btn-outline:hover { background: var(--brand); color: #fff; }
+
+        /* ---------- Cartão do formulário ---------- */
+        main {
+            flex: 1;
+            display: grid;
+            place-items: center;
+            padding: 48px 16px;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 40px 36px;
+            box-shadow: 0 10px 30px rgba(42, 33, 24, .06);
+        }
+
+        .form-card h1 {
+            font-size: 2rem;
+            color: var(--brand);
+            margin-bottom: 6px;
+        }
+
+        .form-card .intro {
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .field { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: .93rem;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1.5px solid var(--line);
+            border-radius: 10px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(31, 95, 91, .15);
+        }
+
+        .form-card .btn-primary { width: 100%; margin-top: 8px; padding: 13px; }
+
+        .alt-link {
+            text-align: center;
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: .95rem;
+        }
+
+        .alt-link a { color: var(--brand); font-weight: 600; }
+        .alt-link a:hover { text-decoration: underline; }
+
+        footer {
+            padding: 24px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-card { padding: 30px 22px; }
+        }
+        .hint { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container nav">
+            <a href="/main" class="logo">Book<span>Flow</span></a>
+            <a href="/cadastro" class="btn btn-outline">Criar conta</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-card">
+            <h1>Entrar</h1>
+            <p class="intro">Acesse sua conta para consultar livros e gerenciar seus empréstimos.</p>
+
+            <form action="/login" method="POST">
+
+                <div class="field">
+                    <label for="email">Nome</label>
+                    <input type="text" id="email" name="nome" value ="{{ user }}" required>
+                </div>
+
+                <div class="field">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <center><a class="hint" style="color:red;">{{ erro }}</a></center>
+            </form>
+
+            <p class="alt-link">Ainda não tem conta? <a href="/cadastro">Cadastre-se</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 BookFlow · Sistema de Gerenciamento de Biblioteca Comunitária · Equipe 03</p>
+        </div>
+    </footer>
+
+</body>
+</html>

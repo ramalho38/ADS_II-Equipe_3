@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de administração | BookFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/painel-admin.css') }}">
+</head>
+
+<body>
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+        <div class="container nav">
+            <a href="#" class="logo">Book<span>Flow</span> <small>Administração</small></a>
+
+
+
+            <!-- Ícone do administrador: abre o menu ao clicar -->
+            <details class="usuario">
+                <summary aria-label="Menu do administrador">🛡️</summary>
+                <div class="menu">
+                    <div class="nome">
+                        {{ session["UserNAME"]}}
+                        <small>{{ session["UserEMAIL"] }}</small>
+                    </div>
+                    <form action="/saidaLogin" method="POST">
+                        <button type="submit" class="sair">Sair</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ===== BOAS-VINDAS ===== -->
+        <div class="topo">
+            <span class="selo">Área restrita</span>
+            <h1>Painel de administração</h1>
+            <p>Gerencie o acervo, os usuários e os relatórios da biblioteca.</p>
+        </div>
+
+        <!-- ===== RESUMO =====
+             Os números abaixo são exemplos. Depois, trocar por valores do banco. -->
+        <section>
+            <h2 class="section-title">Resumo</h2>
+
+            <div class="resumo">
+                <div class="numero">
+                    <span class="valor">{{ livros | length }}</span>
+                    <span class="rotulo">Livros no acervo</span>
+                </div>
+
+                <div class="numero">
+                    <span class="valor">{{ usuarios | length }}</span>
+                    <span class="rotulo">Usuários cadastrados</span>
+                </div>
+
+                <div class="numero">
+                    <span class="valor">{{ emprestimosAtivos | length }}</span>
+                    <span class="rotulo">Empréstimos ativos</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LIVROS ===== -->
+        <section>
+            <h2 class="section-title">Livros</h2>
+            <p class="section-sub">Cadastre novos títulos e mantenha o acervo atualizado.</p>
+
+            <div class="grid">
+                <a href="/cadastroLivro" class="card">
+                    <div class="icon">➕</div>
+                    <h3>Cadastrar livro</h3>
+                    <p>Título, autor, gênero e quantidade disponível.</p>
+                    <span class="link">Cadastrar →</span>
+                </a>
+
+                <a href="/gerenciamentoLivro" class="card">
+                    <div class="icon">✏️</div>
+                    <h3>Gerenciar livros</h3>
+                    <p>Alterar ou excluir livros do acervo.</p>
+                    <span class="link">Gerenciar →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== USUÁRIOS ===== -->
+        <section>
+            <h2 class="section-title">Usuários</h2>
+            <p class="section-sub">Controle quem tem acesso ao sistema.</p>
+
+            <div class="grid">
+                <a href="/criacaoConta" class="card">
+                    <div class="icon">👤</div>
+                    <h3>Cadastrar usuário</h3>
+                    <p>Crie contas de leitores, funcionários ou administradores.</p>
+                    <span class="link">Cadastrar →</span>
+                </a>
+
+                <a href="/gerenciamentoConta" class="card">
+                    <div class="icon">👥</div>
+                    <h3>Gerenciar usuários</h3>
+                    <p>Alterar ou excluir usuários cadastrados.</p>
+                    <span class="link">Gerenciar →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== RELATÓRIOS ===== -->
+        <section>
+            <h2 class="section-title">Relatórios</h2>
+            <p class="section-sub">Acompanhe o movimento da biblioteca.</p>
+
+            <div class="grid">
+                <a href="/gerenciamentoEmprestimo" class="card">
+                    <div class="icon">📊</div>
+                    <h3>Empréstimos</h3>
+                    <p>Obtenha os empréstimos ativos e inativos e acompanhe a atividade da biblioteca.</p>
+                    <span class="link">Gerar →</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 BookFlow · Sistema de Gerenciamento de Biblioteca Comunitária · Equipe 03</p>
+        </div>
+    </footer>
+</body>
+</html>

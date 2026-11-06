@@ -1,0 +1,29 @@
+<!-- Popup de devolução. Os estilos de .modal vêm do base.css (mesmos do popup de empréstimo) -->
+<div class="modal" id="modal-devolucao" role="dialog" aria-modal="true" aria-labelledby="devolucao-titulo">
+
+    <!-- Fundo desfocado: clicar nele fecha o popup -->
+    <button type="button" class="modal-fundo" data-fechar-devolucao aria-label="Fechar"></button>
+
+    <!-- TROQUE o action pela rota que registra a devolução no seu Flask -->
+    <form class="modal-caixa" method="post" action="/devolucao">
+        <div class="modal-icone">↩️</div>
+        <h2 id="devolucao-titulo">Devolver livro</h2>
+        <p class="modal-sub">Confira os dados antes de confirmar.</p>
+
+        <div class="campo">
+            <label for="devolucao-livro">Livro</label>
+            <input type="text" id="devolucao-livro" readonly>
+            <input type="hidden" id='idEmprestimo'name="idEmprestimo" value="">
+        </div>
+
+        <div class="campo">
+            <label for="devolucao-multa">Multa</label>
+            <input type="text" id="devolucao-multa" value="R$ 0,00" readonly>
+        </div>
+
+        <div class="modal-acoes">
+            <button type="button" class="btn btn-outline" data-fechar-devolucao>Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="devolucao-confirmar">Confirmar devolução</button>
+        </div>
+    </form>
+</div>

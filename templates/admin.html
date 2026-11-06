@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração | BookFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+ 
+<body>
+ 
+    <main class="admin-shell">
+ 
+        <!-- ===== PAINEL LATERAL ===== -->
+        <aside class="painel">
+            <a href="/" class="logo">Book<span>Flow</span></a>
+ 
+            <div class="painel-texto">
+                <span class="selo">Área restrita</span>
+                <h1>Administração</h1>
+                <p>Acesso exclusivo para administradores da biblioteca.</p>
+ 
+                <ul class="funcoes">
+                    <li>Cadastrar, alterar e excluir livros</li>
+                    <li>Cadastrar, alterar e excluir usuários</li>
+                    <li>Gerar relatórios</li>
+                </ul>
+            </div>
+ 
+            <p class="painel-rodape">Equipe 03</p>
+        </aside>
+ 
+        <!-- ===== FORMULÁRIO DE ACESSO ===== -->
+        <section class="acesso">
+            <h2>Entrar na administração</h2>
+            <p class="intro">Informe suas credenciais de administrador.</p>
+ 
+            <form action="/admin" method="POST">
+ 
+                <div class="field">
+                    <label for="usuario">Nome de usuário</label>
+                    <input type="text" id="usuario" name="userName" required>
+                </div>
+ 
+                <div class="field">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="userPassword" required>
+                </div>
+ 
+                <button type="submit" class="btn">Acessar</button>
+                <center><p class="hint" style="color: red">{{ erro }}</p></center>
+            </form>
+ 
+            <p class="voltar"><a href="/">← Voltar ao BookFlow</a></p>
+        </section>
+ 
+    </main>
+ 
+</body>
+</html>

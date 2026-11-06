@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar livro | BookFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/painel-admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro-livro.css') }}">
+</head>
+<body>
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+        <div class="container nav">
+            <a href="#" class="logo">Book<span>Flow</span> <small>Administração</small></a>
+
+            <details class="usuario">
+                <summary aria-label="Menu do administrador">🛡️</summary>
+                <div class="menu">
+                    <div class="nome">
+                        {{ session["UserNAME"] }}
+                        <small>{{ session["UserEMAIL"] }}</small>
+                    </div>
+                    <form action="/saidaLogin" method="POST">
+                        <button type="submit" class="sair">Sair</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ===== TOPO ===== -->
+        <div class="topo">
+            <a href="/BaseAdmin" class="voltar">← Voltar ao painel</a>
+            <h1>Cadastrar livro</h1>
+            <p>Preencha os dados do livro para incluí-lo no acervo.</p>
+        </div>
+
+        <form class="form-livro" action="/cadastroLivro" method="POST" enctype="multipart/form-data">
+
+            <!-- Imagem -->
+            <div class="bloco-imagem">
+                <div class="previa">
+                    <span id="icone">📖</span>
+                    <img id="previaImg" hidden>
+                </div>
+
+                <label for="imagem">Imagem da capa</label>
+                <input type="file" id="imagem" accept="image/png, image/jpeg, image/webp" name="imagemLivro">
+                <p class="dica">PNG, JPEG ou WEBP.</p>
+                <p class="dica" style="color: red">{{ erro }}</p>
+            </div>
+
+            <div class="bloco-dados">
+
+                <div class="campo">
+                    <label for="titulo">Título</label>
+                    <input type="text" id="titulo" maxlength="120" name = "tituloLivro" placeholder="Título do livro" required>
+                </div>
+
+                <div class="campo">
+                    <label for="autor">Autor</label>
+                    <input type="text" id="autor" maxlength="80" placeholder="Nome do autor" required name = "autorLivro">
+                </div>
+
+                <div class="linha">
+                    <div class="campo">
+                        <label for="genero">Gênero</label>
+                        <select id="genero" required name="generoLivro">
+                            <option value="" selected disabled>Selecione um gênero</option>
+                            <option>Romance</option>
+                            <option>Ficção</option>
+                            <option>Didático</option>
+                            <option>Infantil</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="estoque">Estoque</label>
+                        <input type="number" id="estoque" min="0" step="1" value="1" name = "estoqueLivro" required>
+                        <p class="dica">Exemplares disponíveis.</p>
+                    </div>
+                </div>
+
+                <div class="acoes">
+                    <a href="/cadastroLivro" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Cadastrar livro</button>
+                </div>
+
+            </div>
+        </form>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 BookFlow · Sistema de Gerenciamento de Biblioteca Comunitária · Equipe 03</p>
+        </div>
+    </footer>
+<script>
+    const entrada = document.getElementById("imagem");
+    const previa = document.getElementById("previaImg");
+    const icone = document.getElementById("icone");
+
+    entrada.addEventListener("change", function () {
+        const arquivo = entrada.files[0];
+
+        if (arquivo) {
+            previa.src = URL.createObjectURL(arquivo);
+            previa.hidden = false;
+            icone.hidden = true;
+        } else {
+            previa.hidden = true;
+            icone.hidden = false;
+        }
+    });
+</script>
+</body>
+</html>

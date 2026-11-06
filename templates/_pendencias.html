@@ -1,0 +1,39 @@
+{# Popups do botão "Minhas pendências" (incluído pelo template da página dos leitores) #}
+
+<!-- Sem pendências: retângulo simples sobre a tela escurecida -->
+<dialog id="pend-vazio" class="pend" aria-labelledby="pend-vazio-titulo">
+    <div class="pend__fundo" data-fechar></div>
+    <div class="pend__caixa">
+        <div class="pend__icone" aria-hidden="true">✔</div>
+        <h2 id="pend-vazio-titulo">Não há pendências</h2>
+        <p>Você está em dia com a biblioteca.</p>
+        <button type="button" class="btn" data-fechar autofocus>Fechar</button>
+    </div>
+</dialog>
+
+<!-- Com pendências: o JS preenche as linhas e anima a chegada delas -->
+<dialog id="pend-lista" class="pend" aria-labelledby="pend-lista-titulo">
+    <div class="pend__fundo" data-fechar></div>
+    <div class="pend__painel">
+        <div class="pend__papel"></div>
+
+        <header class="pend__topo">
+            <h2 id="pend-lista-titulo">Pendências</h2>
+            <p id="pend-lista-sub"></p>
+        </header>
+
+        <div role="table" aria-label="Empréstimos em atraso">
+            <div class="pend__cab" role="row">
+                <span class="pend__cel" role="columnheader">Título</span>
+                <span class="pend__cel" role="columnheader">Retirada</span>
+                <span class="pend__cel" role="columnheader">Devolução</span>
+                <span class="pend__cel" role="columnheader">Prazo</span>
+            </div>
+            <div class="pend__linhas" role="rowgroup"></div>
+        </div>
+
+        <footer class="pend__rodape">
+            <button type="button" class="btn" data-fechar autofocus>Fechar</button>
+        </footer>
+    </div>
+</dialog>

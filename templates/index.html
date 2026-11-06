@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookFlow | Biblioteca Comunitária</title>
+    <meta name="description" content="BookFlow: sistema de gerenciamento de biblioteca comunitária, com cadastro de usuários, empréstimos e consulta de livros.">
+
+    <style>
+        :root {
+            --bg: #fbf7f0;
+            --surface: #ffffff;
+            --ink: #2a2118;
+            --muted: #6f6254;
+            --brand: #1f5f5b;
+            --brand-dark: #164744;
+            --accent: #d98e3f;
+            --line: #e8dfd2;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .logo {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .container {
+            width: min(1100px, 100% - 32px);
+            margin-inline: auto;
+        }
+
+        /* ---------- Cabeçalho ---------- */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 0;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--brand);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        nav ul {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--muted);
+            font-weight: 500;
+            transition: color .2s;
+        }
+
+        nav a:hover { color: var(--brand); }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-weight: 600;
+            border: 2px solid var(--brand);
+            transition: background .2s, color .2s;
+        }
+
+        .btn-primary { background: var(--brand); color: #fff; }
+        .btn-primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+
+        .btn-outline { color: var(--brand); background: transparent; }
+        .btn-outline:hover { background: var(--brand); color: #fff; }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            padding: 80px 0 72px;
+            text-align: center;
+        }
+
+        .hero .tag {
+            display: inline-block;
+            background: #f3e4cc;
+            color: #8a5a1c;
+            font-size: .85rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 999px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.6rem, 7vw, 4.4rem);
+            line-height: 1.05;
+            color: var(--brand);
+            letter-spacing: -1.5px;
+            margin-bottom: 8px;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero .subtitle {
+            font-family: Georgia, serif;
+            font-style: italic;
+            font-size: 1.25rem;
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .hero p.desc {
+            max-width: 680px;
+            margin: 0 auto 32px;
+            font-size: 1.1rem;
+            color: var(--muted);
+        }
+
+        .hero .actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ---------- Seções ---------- */
+        section { padding: 64px 0; }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--brand);
+            margin-bottom: 8px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--muted);
+            max-width: 620px;
+            margin: 0 auto 40px;
+        }
+
+        .alt { background: var(--surface); border-block: 1px solid var(--line); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 26px;
+        }
+
+        .alt .card { background: var(--bg); }
+        section:not(.alt) .card { background: var(--surface); }
+
+        .card .icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: var(--brand);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            margin-bottom: 14px;
+        }
+
+        .card h3 { font-size: 1.2rem; margin-bottom: 6px; }
+        .card p { color: var(--muted); font-size: .97rem; }
+
+        /* Passos */
+        .steps { counter-reset: passo; }
+
+        .step {
+            position: relative;
+            padding-top: 56px;
+        }
+
+        .step::before {
+            counter-increment: passo;
+            content: counter(passo);
+            position: absolute;
+            top: 22px;
+            left: 26px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            display: grid;
+            place-items: center;
+            transform: translateY(-50%);
+            top: 44px;
+        }
+
+        .step { padding-top: 70px; }
+
+        /* Chamada final */
+        .cta {
+            background: var(--brand);
+            color: #fff;
+            text-align: center;
+            border-radius: 22px;
+            padding: 56px 24px;
+        }
+
+        .cta h2 { font-size: 2rem; margin-bottom: 10px; }
+        .cta p { opacity: .9; margin-bottom: 26px; }
+        .cta .btn { background: #fff; color: var(--brand); border-color: #fff; }
+        .cta .btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+        /* ---------- Rodapé ---------- */
+        footer {
+            padding: 32px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        /* ---------- Celular ---------- */
+        @media (max-width: 720px) {
+            nav ul { display: none; }
+            .hero { padding: 56px 0 48px; }
+            section { padding: 48px 0; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+        <div class="container nav">
+            <a href="/" class="logo">Book<span>Flow</span></a>
+
+            <nav aria-label="Menu principal">
+                <ul>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#recursos">Recursos</a></li>
+                    <li><a href="#como-funciona">Como funciona</a></li>
+                </ul>
+            </nav>
+
+            <!-- Botão de login -->
+            <a href="/login" class="btn btn-primary">Entrar</a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===== HERO: nome + descrição ===== -->
+        <section class="hero" id="sobre" style="padding-bottom:72px;">
+            <div class="container">
+                <span class="tag">Biblioteca Comunitária</span>
+                <h1>Book<span>Flow</span></h1>
+                <p class="subtitle">Mais leitura, menos burocracia.</p>
+                <p class="desc">
+                    O BookFlow é um sistema de gerenciamento para bibliotecas comunitárias.
+                    Nosso objetivo é organizar e otimizar os processos da biblioteca, como
+                    cadastro de leitores, controle de empréstimos e devoluções, para que
+                    mais pessoas tenham acesso à leitura, à cultura e à educação.
+                </p>
+                <div class="actions">
+                    <a href="/login" class="btn btn-primary">Entrar na minha conta</a>
+                    <a href="/cadastro" class="btn btn-outline">Criar cadastro</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RECURSOS ===== -->
+        <section class="alt" id="recursos">
+            <div class="container">
+                <h2 class="section-title">O que você encontra no BookFlow</h2>
+                <p class="section-sub">
+                    Uma interface simples e intuitiva, pensada para quem lê e para quem administra a biblioteca.
+                </p>
+
+                <div class="grid">
+                    <article class="card">
+                        <div class="icon">📚</div>
+                        <h3>Livros disponíveis</h3>
+                        <p>Consulte o acervo e veja na hora quais livros estão disponíveis para empréstimo.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon">🔄</div>
+                        <h3>Empréstimos</h3>
+                        <p>Solicite empréstimos com data de retirada e data prevista de devolução registradas.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon">👤</div>
+                        <h3>Sua conta</h3>
+                        <p>Acompanhe seus empréstimos ativos e consulte pendências, como atrasos e multas.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon">🗂️</div>
+                        <h3>Gestão para a equipe</h3>
+                        <p>Funcionários e administradores cadastram livros e usuários e geram relatórios simples.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== COMO FUNCIONA ===== -->
+        <section id="como-funciona">
+            <div class="container">
+                <h2 class="section-title">Como funciona</h2>
+                <p class="section-sub">Em poucos passos você já pode pegar seu próximo livro emprestado.</p>
+
+                <div class="grid steps">
+                    <article class="card step">
+                        <h3>Cadastre-se</h3>
+                        <p>Preencha seus dados pessoais e crie sua conta de leitor.</p>
+                    </article>
+
+                    <article class="card step">
+                        <h3>Faça login</h3>
+                        <p>Entre com seu e-mail e senha para acessar a página principal.</p>
+                    </article>
+
+                    <article class="card step">
+                        <h3>Escolha um livro</h3>
+                        <p>Navegue pela aba de livros disponíveis e veja o que está no acervo.</p>
+                    </article>
+
+                    <article class="card step">
+                        <h3>Peça o empréstimo</h3>
+                        <p>Preencha os dados, envie e acompanhe a devolução pela sua conta.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CHAMADA FINAL ===== -->
+        <section style="padding-top:0;">
+            <div class="container">
+                <div class="cta">
+                    <h2>Pronto para começar?</h2>
+                    <p>Entre na sua conta e descubra o que a sua biblioteca tem para você.</p>
+                    <a href="/login" class="btn">Fazer login</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer>
+        <div class="container">
+            <p>© 2026 BookFlow · Sistema de Gerenciamento de Biblioteca Comunitária · Equipe 03</p>
+        </div>
+    </footer>
+
+</body>
+</html>

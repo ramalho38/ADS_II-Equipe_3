@@ -1,0 +1,66 @@
+/* ---------- Botão "Devolver um livro" ligado ---------- */
+#btn-devolucao.ativo {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(31, 95, 91, .18);
+}
+
+/* ---------- Dica acima da tabela ---------- */
+.emp-dica {
+    margin-bottom: 12px;
+    color: var(--brand);
+    font-weight: 600;
+    font-size: .95rem;
+}
+
+/* ---------- Painel estático, só as linhas balançam ---------- */
+/* A rotação das linhas ultrapassa alguns pixels da caixa e faz as barras de
+   rolagem aparecerem. Enquanto o modo está ligado, a caixa corta o excesso;
+   o padding (compensado pela margem negativa) dá folga para a linha balançar
+   sem ser cortada, e o layout não se mexe. */
+body.modo-devolucao .emp-rolagem {
+    overflow: hidden;
+    padding-block: 8px;
+    margin-block: -8px;
+}
+
+/* Em telas estreitas a tabela precisa rolar para o lado, então só o vertical é cortado */
+@media (max-width: 640px) {
+    body.modo-devolucao .emp-rolagem { overflow-x: auto; overflow-y: hidden; }
+}
+
+/* ---------- Linhas tremendo (modo devolução) ---------- */
+@keyframes devolucao-treme {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-.45deg); }
+    75%      { transform: rotate(.45deg); }
+}
+
+.emp-linha.devolvivel {
+    cursor: pointer;
+    animation: devolucao-treme .28s ease-in-out infinite;
+}
+
+/* Linhas alternadas tremem em sentido oposto, para não ficar tudo sincronizado */
+.emp-linha.devolvivel:nth-child(even) {
+    animation-direction: reverse;
+    animation-delay: -.1s;
+}
+
+.emp-linha.devolvivel td { background: rgba(31, 95, 91, .07); }
+
+/* Ao passar o mouse a linha para de tremer e fica em destaque */
+.emp-linha.devolvivel:hover,
+.emp-linha.devolvivel:focus-visible {
+    animation-play-state: paused;
+    outline: none;
+}
+
+.emp-linha.devolvivel:hover td,
+.emp-linha.devolvivel:focus-visible td {
+    background: rgba(31, 95, 91, .18);
+}
+
+/* Quem prefere menos movimento vê só o destaque, sem tremer */
+@media (prefers-reduced-motion: reduce) {
+    .emp-linha.devolvivel { animation: none; }
+}

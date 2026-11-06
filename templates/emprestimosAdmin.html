@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Empréstimos</title>
+    <style>
+        :root {
+            --teal: #1f5c58;
+            --laranja: #d4883a;
+            --creme: #faf5ee;
+            --borda: #eadfcf;
+            --areia: #f2e3cb;
+            --texto: #4f463d;
+            --suave: #7a6f63;
+            --serif: Georgia, "Times New Roman", serif;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--creme);
+            color: var(--texto);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        h1 { font-family: var(--serif); color: var(--teal); margin: 0; }
+
+        .topo { background: #fff; border-bottom: 1px solid var(--borda); }
+        .topo-int {
+            max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { font-family: var(--serif); font-weight: 700; font-size: 1.6rem; color: var(--teal); }
+        .logo span { color: var(--laranja); }
+        .selo { background: var(--areia); color: #8a5a1c; font-size: .8rem; padding: 5px 12px; border-radius: 999px; }
+
+        .pagina { max-width: 1100px; margin: 0 auto; padding: 40px 24px 64px; }
+        .pagina > h1 { font-size: 2.2rem; margin-bottom: 6px; }
+        .sub { margin: 0 0 28px; color: var(--suave); }
+
+        .cartao {
+            background: #fff; border: 1px solid var(--borda); border-radius: 16px;
+            padding: 8px 22px 14px; overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+        table tr:first-child td {
+            font-size: .75rem; letter-spacing: .04em; text-transform: uppercase;
+            color: var(--suave); font-weight: 600; padding-top: 18px;
+        }
+        table tr:last-child td { border-bottom: none; }
+        table tr:not(:first-child):hover td { background: #fdfaf5; }
+
+        @media (max-width: 640px) {
+            .pagina { padding-top: 28px; }
+            .pagina > h1 { font-size: 1.8rem; }
+            .cartao { padding: 4px 12px 10px; }
+        }
+        
+    </style>
+</head>
+<body>
+    <header class="topo">
+        <div class="topo-int">
+            <span class="logo">Book<span>Flow</span></span>
+            <span class="selo">Administração</span>
+        </div>
+    </header>
+
+    <main class="pagina">
+    <h1>Emprestimos Ativos </h1>
+    <p class="sub">Acompanhe os livros que estão emprestados no momento.</p>
+    <div class="cartao">
+    <table>
+        <tr>
+            <td>Id</td>
+            <td>Nome</td>
+            <td>Livro</td>
+            <td>Retirada</td>
+            <td>Entrega</td>
+        </tr>
+    {% for x in emprestimosAtivos %}
+    <tr>
+    {% for y in x %}
+    <td>{{ y }}</td>
+    {% endfor %}
+    </tr>
+    {% endfor %}
+    </table>
+    </div>
+    </main>
+</body>
+</html>

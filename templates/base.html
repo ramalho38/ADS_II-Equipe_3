@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página principal | BookFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+
+<body>
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+        <div class="container nav">
+            <a href="/main" class="logo">Book<span>Flow</span></a>
+            <!-- Ícone de usuário: abre o menu ao clicar -->
+            <details class="usuario">
+                <summary aria-label="Menu do usuário">👤</summary>
+                <div class="menu">
+                    <div class="nome">
+                        {{ session["UserNAME"]}}
+                        <small>{{ session["UserEMAIL"]}}</small>
+                    </div>
+                    <form action="/saidaLogin" method="POST">
+                        <button type="submit" class="sair">Sair</button>
+                    </form>
+                    
+                </div>
+            </details>
+        </div>
+    </header>
+    {% block main %}{% endblock %}
+    {% block livro %}{% endblock %}
+    {% block emprest %}{% endblock %}
+    
+
+    <footer>
+        <div class="container">
+            <p>© 2026 BookFlow · Sistema de Gerenciamento de Biblioteca Comunitária · Equipe 03</p>
+        </div>
+    </footer>
+
+</body>
+</html>

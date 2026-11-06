@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block livro %}
+{% with mensagens = get_flashed_messages() %}
+        {% if mensagens %}
+            <div class="popup" role="status">
+                <span class="popup-icone">X</span>
+                <span class="popup-texto">{{ mensagens[0] }}</span>
+            </div>
+        {% endif %}
+    {% endwith %}
+<main class="container">
+ 
+    <!-- ===== TOPO + FILTROS ===== -->
+    <div class="livros-topo">
+        <h1>Livros disponíveis</h1>
+        <p>Consulte o acervo e peça emprestado o livro que quiser ler.</p>
+ 
+        <form class="filtros">
+            <input id='tituloPesquisa'type="search" placeholder="Buscar por título ou autor">
+            <button id="buscarLivro"  type="button" class="btn">Buscar</button>
+        </form>
+            
+    </div>
+
+    <section  class="livros-grid" id='lista' aria-label="Lista de livros">
+    </section>
+    <div class="modal" id="emprestimo">
+
+    <!-- Fundo desfocado: clicar fora fecha -->
+    <div class="modal-fundo" data-fechar></div>
+
+    <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="tituloEmprestimo">
+
+        <div class="modal-icone">📖</div>
+        <h2 id="tituloEmprestimo">Pedir empréstimo</h2>
+        <p class="modal-sub">Confirme os dados para retirar o livro.</p>
+
+        <form action="/emprestimo" method="POST">
+            <div class="campo">
+                <input type="text" id="livroEmprestimo" value="" readonly>
+                <input type="hidden" id="seletorLivro" name="idLivroEmprestimo" value="">
+            </div>
+
+            <div class="campo">
+                <label for="prazoEmprestimo">Prazo de devolução</label>
+                <select id="prazoEmprestimo" name="dataEmprestimo" required>
+                    <option value="7" selected>7 dias</option>
+                    <option value="14">14 dias</option>
+                    <option value="21">21 dias</option>
+                </select>
+                <p class="dica" id="tempoEmprestimo"></p>
+            </div>
+
+            <label class="ciente">
+                <input type="checkbox" required>
+                Estou ciente das consequências advindas do desrespeito ao prazo de devolução.
+            </label>
+
+            <div class="modal-acoes">
+                <button type="button" class="btn btn-outline" id='botaoSaida'data-fechar>Cancelar</button>
+                <button type="submit" class="btn btn-primary">Confirmar empréstimo</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+ 
+    <!-- ===== SEM RESULTADOS =====
+         Mostrar este bloco no lugar da lista quando a busca não encontrar nada.
+ 
+    <div class="livros-vazio">
+        <div class="icone">🔍</div>
+        <h3>Nenhum livro encontrado</h3>
+        <p>Tente outro título, autor ou gênero.</p>
+    </div>
+    -->
+ 
+    <p class="livros-aviso">Lembrete: cada dia de atraso em relação ao prazo de devolução equivale a adição de R$2,50 à multa.</p>
+</main>
+<script>
+function calculo(gap) {
+    const data = new Date()
+    data.setDate(data.getDate() + parseInt(gap))
+    tempoEmprestimo.innerHTML = 'Prazo: ' + data.toLocaleDateString("pt-BR") 
+  }
+  calculo(prazoEmprestimo.value)
+  prazoEmprestimo.addEventListener("change", () => calculo(prazoEmprestimo.value))
+realizarBusca('*')  
+buscarLivro.addEventListener('click', () => realizarBusca(tituloPesquisa.value.trim()))
+async function realizarBusca(titulo) {
+    if (titulo) {
+        if (titulo == '*') {
+            globalThis.requisicao = await fetch(
+                'http://127.0.0.1:5000/mecanismoPesquisa',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: `{"tituloLivro":""}` 
+                }
+            )
+        } else {
+        
+        try {
+            globalThis.requisicao = await fetch(
+                'http://127.0.0.1:5000/mecanismoPesquisa',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: `{"tituloLivro":"${titulo}"}` 
+                }
+            )            
+            } catch (erro) {
+                alert('Erro: ', erro)
+            }
+        }
+            globalThis.resposta = await requisicao.json()
+            lista.innerHTML = ''
+            for (let i = 0; i < resposta.length; i++) {
+                console.log(`http://127.0.0.1:5000/capa/${resposta[i][0]}`)
+                lista.innerHTML+=`
+                <article class="livro">
+                    <div class="capa"><img src="http://127.0.0.1:5000/capa/${resposta[i][0]}" alt="Capa"></div>
+                    <div class="corpo">
+                        <h3>${resposta[i][1]}</h3>
+                        <p class="autor">${resposta[i][2]}</p>
+                        <div class="meta">
+                            <span class="selo genero">${resposta[i][3]}</span>
+                            <span class="selo disponivel">${resposta[i][4]} disponíveis</span>
+                        </div>
+                        <a href="?livro=${i}#emprestimo" class="btn">Pedir Empréstimo</a>
+                    </div>
+                </article>
+                `
+            }
+            document.querySelectorAll('.livro .btn').forEach((botao, index) => {
+                botao.addEventListener('click', (event) => {
+                    event.preventDefault() 
+                    emprestimoFinal(index);
+                });
+            });
+    } else {
+        alert('Insira o título.');
+    }
+}
+
+botaoSaida.addEventListener('click', () => {
+    document.getElementById('emprestimo').classList.remove('aberto')
+})
+
+async function emprestimoFinal(index) {
+    if (resposta && resposta[index]) {
+        livroEmprestimo.value = resposta[index][1]; // Título do livro
+        seletorLivro.value = resposta[index][0];    // ID do livro
+        document.getElementById('emprestimo').classList.add('aberto')
+        console.log("Selecionado:", livroEmprestimo.value, seletorLivro.value);
+    } else {
+        console.error("Livro não encontrado no índice:", index);
+    }
+}
+
+</script>
+{% endblock %}

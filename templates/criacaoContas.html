@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Contas</title>
+    <style>
+        :root {
+            --teal: #1f5c58;
+            --teal-escuro: #174744;
+            --laranja: #d4883a;
+            --creme: #faf5ee;
+            --borda: #eadfcf;
+            --areia: #f2e3cb;
+            --texto: #4f463d;
+            --suave: #7a6f63;
+            --perigo: #a8432f;
+            --serif: Georgia, "Times New Roman", serif;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--creme);
+            color: var(--texto);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        h1 { font-family: var(--serif); color: var(--teal); margin: 0; }
+
+        .topo { background: #fff; border-bottom: 1px solid var(--borda); }
+        .topo-int {
+            max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { font-family: var(--serif); font-weight: 700; font-size: 1.6rem; color: var(--teal); }
+        .logo span { color: var(--laranja); }
+        .selo { background: var(--areia); color: #8a5a1c; font-size: .8rem; padding: 5px 12px; border-radius: 999px; }
+
+        .pagina { max-width: 480px; margin: 0 auto; padding: 48px 20px 64px; }
+        .pagina > h1 { font-size: 2rem; margin-bottom: 6px; }
+        .sub { margin: 0 0 24px; color: var(--suave); }
+
+        .cartao {
+            background: #fff; border: 1px solid var(--borda); border-radius: 16px; padding: 28px;
+        }
+        .cartao label {
+            display: block; margin-bottom: 16px; font-size: .85rem; font-weight: 600; color: var(--suave);
+        }
+        .cartao input, .cartao select {
+            display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+            font: inherit; font-weight: 400; color: var(--texto);
+            border: 1.5px solid var(--borda); border-radius: 10px; background: #fff;
+        }
+        .cartao input:focus, .cartao select:focus {
+            outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(31, 92, 88, .15);
+        }
+        button {
+            font: inherit; cursor: pointer; width: 100%; margin-top: 8px;
+            border: 2px solid var(--teal); background: var(--teal); color: #fff;
+            border-radius: 999px; padding: 12px 22px; font-weight: 600;
+            transition: background .15s;
+        }
+        button:hover { background: var(--teal-escuro); border-color: var(--teal-escuro); }
+        :focus-visible { outline: 3px solid var(--laranja); outline-offset: 2px; }
+
+        .erro {
+            margin: 16px 0 0; padding: 12px 16px; border-radius: 10px;
+            background: #f6e1db; color: var(--perigo); font-size: .9rem;
+        }
+        .erro:empty { display: none; }
+        .popup {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--brand);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(42, 33, 24, .2);
+    animation: popup 4.5s ease forwards;
+}
+
+.popup-icone {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.popup-texto { font-weight: 600; }
+
+@keyframes popup {
+    0%   { opacity: 0; transform: translateX(40px); }
+    8%   { opacity: 1; transform: translateX(0); }
+    85%  { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(40px); visibility: hidden; }
+}
+
+@media (max-width: 760px) {
+    .popup { left: 16px; right: 16px; }
+}
+    </style>
+</head>
+<body>
+    <header class="topo">
+        <div class="topo-int">
+            <span class="logo">Book<span>Flow</span></span>
+            <span class="selo">Administração</span>
+        </div>
+    </header>
+    {% with mensagens = get_flashed_messages() %}
+        {% if mensagens %}
+            <div class="popup" role="status">
+                <span class="popup-icone">✔</span>
+                <span class="popup-texto">{{ mensagens[0] }}</span>
+            </div>
+        {% endif %}
+    {% endwith %}
+    <main class="pagina">
+    <h1>Criar conta</h1>
+    <p class="sub">Cadastre um novo leitor ou administrador.</p>
+    <form action="criacaoConta" method="post" class="cartao">
+        <label>Nome <input type="text" name="nomeUsuario" required pattern="[A-Za-z0-9_]+" oninvalid="this.setCustomValidity('Use apenas letras, números ou underline')"  oninput="this.setCustomValidity('')"></label>
+        <label>Email <input type="email" name="emailUsuario" required></label>
+        <label>Senha <input type="text" name="senhaUsuario"  required pattern="[A-Za-z0-9_]+"  oninvalid="this.setCustomValidity('Use apenas letras, números ou underline')"  oninput="this.setCustomValidity('')"></label>
+        <label>Cargo <select name="cargoUsuario">
+            <option value="1" >Administrador</option>
+        <option value="0">Leitor</option>
+        </select></label>
+        <button type="submit">Criar</button>
+        <p class="erro">{{ erro }}</p>
+    </form>
+    </main>
+</body>
+</html>
